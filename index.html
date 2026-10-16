@@ -35,21 +35,11 @@
   --body: "Figtree", "Segoe UI", system-ui, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
 
-  --step-0: 1rem; --step-1: 1.2rem; --step-2: 1.5rem; --step-3: 2.1rem; --step-4: clamp(2rem, 4.2vw, 3.2rem);
+  --step-0: 1rem; --step-1: 1.2rem; --step-2: 1.5rem; --step-3: 2.1rem; --step-4: clamp(2.5rem, 4.6vw, 3.4rem);
   --wrap: 1180px;
   --r: 6px;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --paper: #0E141B; --surface: #161F2A; --ink: #E7EBEF; --muted: #9AA6B4; --line: #283442;
-    --band: #13233A; --band-ink: #EEF2F7; --band-muted: #9FB0C6; --ok: #5FBF86;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --paper: #0E141B; --surface: #161F2A; --ink: #E7EBEF; --muted: #9AA6B4; --line: #283442;
-  --band: #13233A; --band-ink: #EEF2F7; --band-muted: #9FB0C6; --ok: #5FBF86;
-  color-scheme: dark;
+  /* sajt je namjerno uvijek svijetao, bez obzira na tamni mod telefona */
+  color-scheme: light;
 }
 
 * { box-sizing: border-box; }
@@ -77,7 +67,7 @@ p { margin: 0; }
 .topbar .wrap { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding-block: .45rem; flex-wrap: wrap; }
 .topbar .info { display: flex; gap: 1.2rem; flex-wrap: wrap; }
 .lang { display: flex; gap: .2rem; }
-@media (max-width: 600px) { .topbar .info span + span { display: none; } .topbar .wrap { flex-wrap: nowrap; } }
+@media (max-width: 600px) { .topbar { display: none; } }
 .lang button { font: inherit; color: var(--band-muted); background: none; border: 1px solid transparent; border-radius: 4px; padding: .1rem .45rem; cursor: pointer; }
 .lang button[aria-pressed="true"] { color: var(--band-ink); border-color: color-mix(in srgb, var(--band-ink) 40%, transparent); }
 
@@ -95,9 +85,21 @@ nav.main a { text-decoration: none; font-weight: 600; font-size: .93rem; padding
 nav.main a:hover { color: var(--ink); }
 nav.main a[aria-current="page"] { color: var(--ink); box-shadow: inset 0 -2px 0 var(--thread); border-radius: 0; }
 nav.main .btn { margin-left: .5rem; color: var(--thread-ink); }
-.menu-toggle { display: none; background: none; border: 1px solid var(--line); border-radius: var(--r); padding: .5rem .7rem; font: 600 .9rem var(--body); color: var(--ink); cursor: pointer; }
+.head-actions { display: none; align-items: center; gap: .5rem; }
+.head-actions a, .menu-toggle { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; border: 0; cursor: pointer; }
+.head-actions svg { width: 20px; height: 20px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.call { background: var(--thread); }
+.call svg { stroke: var(--thread-ink); }
+.menu-toggle { background: var(--band); }
+.menu-toggle svg { stroke: var(--band-ink); }
+.menu-toggle .i-close, .menu-toggle[aria-expanded="true"] .i-open { display: none; }
+.menu-toggle[aria-expanded="true"] .i-close { display: block; }
 @media (max-width: 920px) {
-  .menu-toggle { display: block; }
+  .head-actions { display: flex; }
+  header.site .wrap { padding-block: .6rem; }
+  .logo-text small .since { display: none; }
+  nav.main a { color: var(--ink); font-size: 1.1rem; padding: .85rem 0; border-bottom: 1px solid var(--line); border-radius: 0; }
+  nav.main a[aria-current="page"] { box-shadow: inset 3px 0 0 var(--thread); padding-left: .8rem; }
   nav.main { display: none; position: absolute; left: 0; right: 0; top: 100%; flex-direction: column; align-items: stretch; background: var(--paper); border-bottom: 1px solid var(--line); padding: .5rem max(16px, env(safe-area-inset-right, 0px)) 1rem max(16px, env(safe-area-inset-left, 0px)); }
   nav.main.open { display: flex; }
   nav.main .btn { margin: .5rem 0 0; justify-content: center; }
@@ -332,9 +334,12 @@ footer.site .legal { grid-column: 1 / -1; border-top: 1px dashed color-mix(in sr
   <div class="wrap" style="position:relative">
     <a class="logo" href="#naslovna" aria-label="Lenatex naslovna">
       <span class="logo-mark"><span>L</span></span>
-      <span class="logo-text"><b>LENATEX</b><small>proizvodnja tekstila · od 1998.</small></span>
+      <span class="logo-text"><b>LENATEX</b><small>proizvodnja tekstila<span class="since"> · od 1998.</span></small></span>
     </a>
-    <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="mainNav">Meni</button>
+    <div class="head-actions">
+      <a class="call" href="tel:+38737777518" aria-label="Pozovite +387 37 777 518"><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></a>
+      <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="mainNav" aria-label="Meni"><svg class="i-open" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg><svg class="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
     <nav class="main" id="mainNav" aria-label="Glavna navigacija">
       <a href="#o-nama">O nama</a>
       <a href="#radna-odjeca">Radna odjeća</a>
