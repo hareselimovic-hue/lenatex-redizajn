@@ -35,7 +35,7 @@
   --body: "Figtree", "Segoe UI", system-ui, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
 
-  --step-0: 1rem; --step-1: 1.2rem; --step-2: 1.5rem; --step-3: 2.1rem; --step-4: clamp(2.4rem, 5.6vw, 4.4rem);
+  --step-0: 1rem; --step-1: 1.2rem; --step-2: 1.5rem; --step-3: 2.1rem; --step-4: clamp(2rem, 4.2vw, 3.2rem);
   --wrap: 1180px;
   --r: 6px;
 }
@@ -128,7 +128,7 @@ nav.main .btn { margin-left: .5rem; color: var(--thread-ink); }
 .page { padding-bottom: 0; }
 .page-hero { padding-block: clamp(2.5rem, 6vw, 4.5rem) 2.5rem; border-bottom: 1px solid var(--line); }
 .page-hero .wrap { display: grid; gap: 1rem; }
-.page-hero h1 { font-size: var(--step-4); font-weight: 800; }
+.page-hero h1 { font-size: var(--step-4); font-weight: 700; font-stretch: 105%; }
 .crumbs { font-family: var(--mono); font-size: .76rem; color: var(--muted); }
 .crumbs a { color: var(--muted); }
 section.block { padding-block: clamp(3rem, 7vw, 5rem); }
@@ -139,7 +139,7 @@ section.block + section.block { border-top: 1px solid var(--line); }
 /* HOME hero */
 .hero { padding-block: clamp(2.5rem, 6vw, 5rem); }
 .hero .wrap { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
-.hero h1 { font-size: var(--step-4); font-weight: 850; font-stretch: 118%; }
+.hero h1 { font-size: var(--step-4); font-weight: 650; font-stretch: 100%; letter-spacing: -0.015em; line-height: 1.12; }
 .hero h1 em { font-style: normal; background: linear-gradient(transparent 62%, color-mix(in srgb, var(--thread) 55%, transparent) 62% 92%, transparent 92%); }
 .hero .copy { display: grid; gap: 1.4rem; min-width: 0; }
 .hero .actions { display: flex; gap: .8rem; flex-wrap: wrap; }
@@ -352,8 +352,8 @@ footer.site .legal { grid-column: 1 / -1; border-top: 1px dashed color-mix(in sr
   <section class="hero">
     <div class="wrap">
       <div class="copy">
-        <p class="eyebrow">Porodična tekstilna proizvodnja · Velika Kladuša</p>
-        <h1>Radna odjeća, posteljina i vez. <em>Šiveno kod nas</em> od 1998.</h1>
+        <p class="eyebrow">Porodična tekstilna proizvodnja · Velika Kladuša · od 1998.</p>
+        <h1>Radna odjeća, posteljina i vez, <em>izrađeni po Vašoj mjeri</em></h1>
         <p class="lead">Po narudžbi proizvodimo radnu odjeću za sve vrste djelatnosti, kompletan posteljni program i mašinski vez s vašim logom. Isporučujemo širom Bosne i Hercegovine i u dijelove Evrope.</p>
         <div class="actions">
           <a class="btn btn-thread" href="#kontakt">Zatraži ponudu</a>
