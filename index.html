@@ -1,0 +1,772 @@
+<!doctype html>
+<html lang="bs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lenatex redizajn</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Figtree:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: šivaća radionica — tkanine kao "fotografije", ušivene etikete kao kartice, žuti konac kao jedini akcenat */
+:root {
+  --paper: #F2F4F1;
+  --surface: #FFFFFF;
+  --ink: #15202C;
+  --muted: #566170;
+  --line: #D6DBD6;
+  --band: #1D3150;
+  --band-ink: #EEF2F7;
+  --band-muted: #A9B8CC;
+  --thread: #E8B523;
+  --thread-ink: #15202C;
+  --ok: #2E7D4F;
+
+  /* boje tkanina (uzorci) — iste u oba moda, ponašaju se kao fotografije */
+  --f-navy: #22395B; --f-navy2: #1A2C47;
+  --f-black: #23262B; --f-black2: #191B1F;
+  --f-white: #ECEDEA; --f-white2: #D9DBD6;
+  --f-teal: #5C9EA6; --f-teal2: #4D8C94;
+  --f-red: #B8322F; --f-red2: #9E2826;
+  --f-rose: #E6C9C4; --f-sky: #BFD3E2; --f-sand: #E3D6BF; --f-sage: #B9C8B4;
+
+  --display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --body: "Figtree", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+
+  --step-0: 1rem; --step-1: 1.2rem; --step-2: 1.5rem; --step-3: 2.1rem; --step-4: clamp(2.4rem, 5.6vw, 4.4rem);
+  --wrap: 1180px;
+  --r: 6px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0E141B; --surface: #161F2A; --ink: #E7EBEF; --muted: #9AA6B4; --line: #283442;
+    --band: #13233A; --band-ink: #EEF2F7; --band-muted: #9FB0C6; --ok: #5FBF86;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0E141B; --surface: #161F2A; --ink: #E7EBEF; --muted: #9AA6B4; --line: #283442;
+  --band: #13233A; --band-ink: #EEF2F7; --band-muted: #9FB0C6; --ok: #5FBF86;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.6; }
+a { color: inherit; }
+h1, h2, h3, h4 { font-family: var(--display); font-stretch: 112%; line-height: 1.05; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+p { margin: 0; }
+:focus-visible { outline: 2px solid var(--thread); outline-offset: 3px; }
+
+.wrap { max-width: var(--wrap); margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.eyebrow { font-family: var(--mono); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); }
+.lead { font-size: var(--step-1); color: var(--muted); max-width: 60ch; }
+.prose { max-width: 65ch; display: grid; gap: 1rem; color: var(--muted); }
+
+/* gumbi */
+.btn { display: inline-flex; align-items: center; gap: .5rem; font-family: var(--display); font-weight: 700; font-stretch: 105%; font-size: .95rem; text-decoration: none; padding: .85rem 1.3rem; border-radius: var(--r); border: 2px solid transparent; cursor: pointer; transition: transform .15s ease, background .15s ease; }
+.btn-thread { background: var(--thread); color: var(--thread-ink); }
+.btn-thread:hover { transform: translateY(-1px); }
+.btn-ghost { border-color: var(--line); color: var(--ink); background: transparent; }
+.btn-ghost:hover { border-color: var(--ink); }
+.band .btn-ghost { color: var(--band-ink); border-color: color-mix(in srgb, var(--band-ink) 35%, transparent); }
+
+/* gornja traka */
+.topbar { background: var(--band); color: var(--band-muted); font-family: var(--mono); font-size: .76rem; }
+.topbar .wrap { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding-block: .45rem; flex-wrap: wrap; }
+.topbar .info { display: flex; gap: 1.2rem; flex-wrap: wrap; }
+.lang { display: flex; gap: .2rem; }
+.lang button { font: inherit; color: var(--band-muted); background: none; border: 1px solid transparent; border-radius: 4px; padding: .1rem .45rem; cursor: pointer; }
+.lang button[aria-pressed="true"] { color: var(--band-ink); border-color: color-mix(in srgb, var(--band-ink) 40%, transparent); }
+
+/* zaglavlje */
+header.site { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+header.site .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: .8rem; }
+.logo { display: flex; align-items: center; gap: .7rem; text-decoration: none; }
+.logo-mark { width: 38px; height: 38px; border-radius: 50%; background: var(--band); display: grid; place-items: center; position: relative; flex: none; }
+.logo-mark::after { content: ""; position: absolute; inset: 5px; border: 1.5px dashed var(--thread); border-radius: 50%; }
+.logo-mark span { font-family: var(--display); font-weight: 900; color: var(--band-ink); font-size: 1rem; }
+.logo-text b { display: block; font-family: var(--display); font-weight: 900; font-stretch: 125%; font-size: 1.15rem; letter-spacing: .04em; line-height: 1; }
+.logo-text small { font-family: var(--mono); font-size: .66rem; color: var(--muted); letter-spacing: .06em; }
+nav.main { display: flex; align-items: center; gap: .2rem; }
+nav.main a { text-decoration: none; font-weight: 600; font-size: .93rem; padding: .5rem .75rem; border-radius: var(--r); color: var(--muted); }
+nav.main a:hover { color: var(--ink); }
+nav.main a[aria-current="page"] { color: var(--ink); box-shadow: inset 0 -2px 0 var(--thread); border-radius: 0; }
+nav.main .btn { margin-left: .5rem; color: var(--thread-ink); }
+.menu-toggle { display: none; background: none; border: 1px solid var(--line); border-radius: var(--r); padding: .5rem .7rem; font: 600 .9rem var(--body); color: var(--ink); cursor: pointer; }
+@media (max-width: 920px) {
+  .menu-toggle { display: block; }
+  nav.main { display: none; position: absolute; left: 0; right: 0; top: 100%; flex-direction: column; align-items: stretch; background: var(--paper); border-bottom: 1px solid var(--line); padding: .5rem max(16px, env(safe-area-inset-right, 0px)) 1rem max(16px, env(safe-area-inset-left, 0px)); }
+  nav.main.open { display: flex; }
+  nav.main .btn { margin: .5rem 0 0; justify-content: center; }
+}
+
+/* tkanine */
+.fab { position: relative; overflow: hidden; border-radius: var(--r); }
+.twill-navy { background: repeating-linear-gradient(45deg, var(--f-navy) 0 3px, var(--f-navy2) 3px 5px); }
+.twill-black { background: repeating-linear-gradient(45deg, var(--f-black) 0 3px, var(--f-black2) 3px 5px); }
+.twill-teal { background: repeating-linear-gradient(45deg, var(--f-teal) 0 3px, var(--f-teal2) 3px 5px); }
+.twill-red { background: repeating-linear-gradient(45deg, var(--f-red) 0 3px, var(--f-red2) 3px 5px); }
+.pepita { background-color: var(--f-white); background-image: repeating-linear-gradient(0deg, rgba(21,32,44,.75) 0 4px, transparent 4px 8px), repeating-linear-gradient(90deg, rgba(21,32,44,.55) 0 4px, transparent 4px 8px); background-blend-mode: multiply; }
+.satin { background: linear-gradient(115deg, #C9D9E6 0%, #EEF4F9 28%, #B7CBDB 46%, #E4EDF4 64%, #BFD3E2 100%); }
+.krep { background-color: var(--f-rose); background-image: repeating-linear-gradient(87deg, rgba(255,255,255,.35) 0 1px, transparent 1px 3px), repeating-linear-gradient(-4deg, rgba(120,60,50,.10) 0 1px, transparent 1px 4px); }
+.flanel { background-color: var(--f-sage); background-image: repeating-linear-gradient(0deg, rgba(40,70,50,.28) 0 14px, transparent 14px 28px), repeating-linear-gradient(90deg, rgba(40,70,50,.28) 0 14px, transparent 14px 28px), repeating-linear-gradient(0deg, transparent 0 6px, rgba(255,255,255,.3) 6px 7px, transparent 7px 28px); }
+.damast { background-color: var(--f-white); background-image: radial-gradient(ellipse 14px 22px at 50% 50%, rgba(160,150,120,.22) 60%, transparent 62%), radial-gradient(ellipse 22px 14px at 0 0, rgba(160,150,120,.18) 60%, transparent 62%), linear-gradient(90deg, rgba(255,255,255,.5), rgba(200,195,180,.25), rgba(255,255,255,.5)); background-size: 44px 44px, 44px 44px, 100% 100%; }
+.sifon { background-color: var(--f-sand); background-image: repeating-linear-gradient(90deg, rgba(255,255,255,.45) 0 2px, transparent 2px 9px), linear-gradient(180deg, rgba(255,255,255,.4), transparent); }
+.reflex { position: absolute; left: 0; right: 0; height: 12%; background: repeating-linear-gradient(90deg, #DADFE3 0 2px, #C3C9CE 2px 4px); box-shadow: 0 0 0 3px var(--thread) inset; }
+
+/* etiketa (care label) */
+.tag { background: var(--surface); color: var(--ink); font-family: var(--mono); font-size: .72rem; line-height: 1.5; padding: .8rem 1rem; border-radius: 3px; box-shadow: 0 10px 30px rgba(10,20,35,.25); position: relative; }
+.tag::before { content: ""; position: absolute; inset: 4px; border: 1px dashed var(--line); border-radius: 2px; pointer-events: none; }
+.tag b { font-family: var(--display); font-stretch: 125%; font-weight: 900; font-size: .9rem; letter-spacing: .06em; display: block; }
+.care { display: flex; gap: .45rem; margin-top: .35rem; }
+.care svg { width: 22px; height: 22px; stroke: var(--ink); fill: none; stroke-width: 1.4; }
+.care text { fill: var(--ink); stroke: none; font: 600 7px var(--mono); }
+
+/* stranice */
+.page { padding-bottom: 0; }
+.page-hero { padding-block: clamp(2.5rem, 6vw, 4.5rem) 2.5rem; border-bottom: 1px solid var(--line); }
+.page-hero .wrap { display: grid; gap: 1rem; }
+.page-hero h1 { font-size: var(--step-4); font-weight: 800; }
+.crumbs { font-family: var(--mono); font-size: .76rem; color: var(--muted); }
+.crumbs a { color: var(--muted); }
+section.block { padding-block: clamp(3rem, 7vw, 5rem); }
+section.block + section.block { border-top: 1px solid var(--line); }
+.sec-head { display: grid; gap: .6rem; margin-bottom: 2rem; max-width: 70ch; }
+.sec-head h2 { font-size: var(--step-3); font-weight: 800; }
+
+/* HOME hero */
+.hero { padding-block: clamp(2.5rem, 6vw, 5rem); }
+.hero .wrap { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+.hero h1 { font-size: var(--step-4); font-weight: 850; font-stretch: 118%; }
+.hero h1 em { font-style: normal; background: linear-gradient(transparent 62%, color-mix(in srgb, var(--thread) 55%, transparent) 62% 92%, transparent 92%); }
+.hero .copy { display: grid; gap: 1.4rem; min-width: 0; }
+.hero .actions { display: flex; gap: .8rem; flex-wrap: wrap; }
+.board { position: relative; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 170px 130px 150px; gap: 10px; }
+.board .fab { min-height: 0; }
+.board .a { grid-row: span 2; }
+.board .tag { position: absolute; right: -6px; bottom: 26px; width: 210px; transform: rotate(-3deg); }
+.board .stitch-line { position: absolute; left: 8%; right: 8%; top: 52%; border-top: 2px dashed var(--thread); opacity: .9; pointer-events: none; }
+.board .label-chip { position: absolute; left: 10px; bottom: 10px; font-family: var(--mono); font-size: .68rem; background: rgba(255,255,255,.88); color: #15202C; padding: .15rem .45rem; border-radius: 3px; }
+@media (max-width: 860px) {
+  .hero .wrap { grid-template-columns: 1fr; }
+  .board { grid-template-rows: 120px 100px 110px; }
+  .board .tag { right: 6px; }
+}
+
+/* činjenice */
+.facts { background: var(--band); color: var(--band-ink); }
+.facts .wrap { display: grid; grid-template-columns: repeat(4, 1fr); padding-block: 1.6rem; gap: 1rem; }
+.facts div { display: grid; gap: .15rem; padding-left: 1rem; border-left: 2px dashed color-mix(in srgb, var(--thread) 70%, transparent); }
+.facts b { font-family: var(--display); font-weight: 800; font-stretch: 115%; font-size: 1.35rem; }
+.facts span { color: var(--band-muted); font-size: .88rem; }
+@media (max-width: 760px) { .facts .wrap { grid-template-columns: 1fr 1fr; } }
+
+/* programi */
+.programs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+.program { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; display: grid; grid-template-rows: 180px auto; text-decoration: none; transition: border-color .15s ease, transform .15s ease; }
+.program:hover { border-color: var(--ink); transform: translateY(-2px); }
+.program .body { padding: 1.3rem 1.3rem 1.5rem; display: grid; gap: .7rem; align-content: start; }
+.program h3 { font-size: var(--step-2); font-weight: 800; }
+.program p { color: var(--muted); }
+.program ul { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: .35rem; }
+.program li { font-family: var(--mono); font-size: .72rem; border: 1px solid var(--line); border-radius: 3px; padding: .1rem .45rem; color: var(--muted); }
+.program .more { font-family: var(--display); font-weight: 700; font-size: .9rem; margin-top: .3rem; }
+.program .more::after { content: " →"; }
+@media (max-width: 860px) { .programs { grid-template-columns: 1fr; } }
+
+/* koraci */
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; counter-reset: s; position: relative; }
+.step { padding: 1.4rem 1.2rem 0 0; display: grid; gap: .5rem; align-content: start; position: relative; border-top: 2px dashed var(--thread); }
+.step::before { counter-increment: s; content: counter(s, decimal-leading-zero); font-family: var(--mono); font-size: .75rem; color: var(--muted); }
+.step::after { content: ""; position: absolute; top: -7px; left: 0; width: 12px; height: 12px; border-radius: 50%; background: var(--paper); border: 2px solid var(--ink); }
+.step h3 { font-size: var(--step-1); font-weight: 750; }
+.step p { color: var(--muted); font-size: .95rem; }
+@media (max-width: 860px) { .steps { grid-template-columns: 1fr 1fr; row-gap: 2rem; } }
+@media (max-width: 480px) { .steps { grid-template-columns: 1fr; } }
+
+/* materijali */
+.swatches { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; }
+.swatch { display: grid; gap: .6rem; align-content: start; }
+.swatch .fab { aspect-ratio: 3/4; max-width: 100%; box-shadow: inset 0 0 0 1px rgba(0,0,0,.06); }
+.swatch h3 { font-size: 1.05rem; font-weight: 800; }
+.swatch p { font-size: .88rem; color: var(--muted); }
+.swatch .spec { font-family: var(--mono); font-size: .72rem; color: var(--muted); }
+@media (max-width: 860px) { .swatches { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 520px) { .swatches { grid-template-columns: 1fr 1fr; } }
+
+/* djelatnosti */
+.chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+.chips span { border: 1px solid var(--line); background: var(--surface); padding: .45rem .85rem; border-radius: 999px; font-weight: 500; font-size: .93rem; }
+
+/* CTA traka */
+.band { background: var(--band); color: var(--band-ink); }
+.cta .wrap { display: grid; grid-template-columns: 1.3fr 1fr; gap: 2rem; align-items: center; padding-block: clamp(3rem, 6vw, 4.5rem); }
+.cta h2 { font-size: var(--step-3); font-weight: 800; }
+.cta p { color: var(--band-muted); margin-top: .8rem; max-width: 52ch; }
+.cta .contact-lines { display: grid; gap: .6rem; font-family: var(--mono); font-size: .95rem; }
+.cta .contact-lines span { color: var(--band-muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; display: block; }
+.cta .actions { display: flex; gap: .8rem; flex-wrap: wrap; margin-top: 1.4rem; }
+@media (max-width: 760px) { .cta .wrap { grid-template-columns: 1fr; } }
+
+/* linije radne odjeće */
+.lines { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; }
+.line-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; display: grid; grid-template-rows: 150px auto; }
+.line-card .fab { border-radius: 0; }
+.line-card .body { padding: 1rem 1rem 1.2rem; display: grid; gap: .45rem; align-content: start; }
+.line-card h3 { font-stretch: 125%; font-weight: 900; font-size: 1.05rem; letter-spacing: .05em; }
+.line-card p { font-size: .88rem; color: var(--muted); }
+@media (max-width: 1000px) { .lines { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 620px) { .lines { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 400px) { .lines { grid-template-columns: 1fr; } }
+
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 4rem); align-items: start; }
+.split > * { min-width: 0; }
+@media (max-width: 860px) { .split { grid-template-columns: 1fr; } }
+
+.checklist { list-style: none; margin: 0; padding: 0; display: grid; gap: .8rem; }
+.checklist li { display: grid; grid-template-columns: 22px 1fr; gap: .7rem; align-items: start; }
+.checklist li::before { content: ""; width: 18px; height: 18px; margin-top: .2rem; border: 2px dashed var(--thread); border-radius: 50%; }
+.checklist b { display: block; }
+.checklist span { color: var(--muted); font-size: .95rem; }
+
+.spec-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 1.4rem; display: grid; gap: 1rem; }
+.spec-card h3 { font-size: var(--step-1); font-weight: 800; }
+.spec-row { display: flex; justify-content: space-between; gap: 1rem; border-bottom: 1px dashed var(--line); padding-bottom: .55rem; font-size: .95rem; }
+.spec-row:last-child { border-bottom: 0; padding-bottom: 0; }
+.spec-row span:first-child { color: var(--muted); }
+.spec-row span:last-child { font-family: var(--mono); font-size: .85rem; text-align: right; }
+
+/* tabela dimenzija */
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 520px; font-size: .95rem; }
+th, td { text-align: left; padding: .75rem 1rem; border-bottom: 1px solid var(--line); }
+th { font-family: var(--mono); font-weight: 500; font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+tr:last-child td { border-bottom: 0; }
+.note { font-size: .85rem; color: var(--muted); margin-top: .7rem; }
+
+.products { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.product { display: grid; grid-template-columns: 64px 1fr; gap: 1rem; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: .8rem; }
+.product .fab { width: 64px; height: 64px; }
+.product h3 { font-size: 1rem; font-weight: 750; font-stretch: 105%; }
+.product p { color: var(--muted); font-size: .86rem; }
+@media (max-width: 860px) { .products { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 520px) { .products { grid-template-columns: 1fr; } }
+
+/* vez */
+.embroidery { position: relative; aspect-ratio: 4/3; max-width: 100%; border-radius: var(--r); overflow: hidden; }
+.embroidery svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.uses { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+.use { border-top: 2px dashed var(--thread); padding-top: .9rem; display: grid; gap: .3rem; }
+.use h3 { font-size: 1.05rem; font-weight: 800; }
+.use p { font-size: .9rem; color: var(--muted); }
+@media (max-width: 860px) { .uses { grid-template-columns: 1fr 1fr; } }
+
+/* forme */
+form.inquiry { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: clamp(1.2rem, 3vw, 2rem); display: grid; gap: 1rem; }
+.field { display: grid; gap: .35rem; }
+.field label { font-weight: 600; font-size: .9rem; }
+.field input, .field select, .field textarea { font: inherit; color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: var(--r); padding: .7rem .8rem; width: 100%; }
+.field textarea { min-height: 120px; resize: vertical; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 520px) { .row2 { grid-template-columns: 1fr; } }
+.form-msg { font-size: .9rem; color: var(--ok); font-weight: 600; }
+
+.contact-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(2rem, 5vw, 4rem); }
+.contact-grid > * { min-width: 0; }
+@media (max-width: 860px) { .contact-grid { grid-template-columns: 1fr; } }
+.contact-list { display: grid; gap: 1.3rem; }
+.contact-list div { display: grid; gap: .15rem; }
+.contact-list span { font-family: var(--mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+.contact-list b { font-family: var(--display); font-stretch: 110%; font-size: 1.3rem; font-weight: 750; }
+.map { margin-top: 1.5rem; border-radius: var(--r); border: 1px solid var(--line); background-color: var(--surface); background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 32px 32px; aspect-ratio: 16/10; max-width: 100%; position: relative; overflow: hidden; }
+.map .road { position: absolute; background: color-mix(in srgb, var(--thread) 60%, var(--surface)); }
+.map .pin { position: absolute; left: 56%; top: 44%; transform: translate(-50%, -100%); display: grid; justify-items: center; gap: .3rem; }
+.map .pin i { width: 22px; height: 22px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--band); border: 3px solid var(--thread); }
+.map .pin b { font-family: var(--mono); font-size: .72rem; background: var(--surface); padding: .15rem .5rem; border-radius: 3px; border: 1px solid var(--line); white-space: nowrap; }
+.map a { position: absolute; right: .8rem; bottom: .8rem; }
+
+/* o nama */
+.values { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+.value { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 1.4rem; display: grid; gap: .5rem; align-content: start; }
+.value h3 { font-size: var(--step-1); font-weight: 800; }
+.value p { color: var(--muted); font-size: .95rem; }
+@media (max-width: 860px) { .values { grid-template-columns: 1fr; } }
+.big-year { font-family: var(--display); font-weight: 900; font-stretch: 125%; font-size: clamp(5rem, 16vw, 11rem); line-height: .85; color: transparent; -webkit-text-stroke: 2px var(--ink); letter-spacing: -.02em; }
+.big-year + p { font-family: var(--mono); font-size: .8rem; color: var(--muted); margin-top: .6rem; }
+
+/* footer */
+footer.site { background: var(--band); color: var(--band-muted); font-size: .9rem; }
+footer.site .wrap { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 2rem; padding-block: 3rem 1.5rem; }
+footer.site h4 { font-family: var(--mono); font-weight: 500; font-size: .72rem; text-transform: uppercase; letter-spacing: .12em; color: var(--band-ink); margin-bottom: .8rem; }
+footer.site ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .4rem; }
+footer.site a { text-decoration: none; }
+footer.site a:hover { color: var(--band-ink); }
+footer.site .logo-text b { color: var(--band-ink); }
+footer.site .logo-text small { color: var(--band-muted); }
+footer.site .legal { grid-column: 1 / -1; border-top: 1px dashed color-mix(in srgb, var(--band-ink) 25%, transparent); padding-top: 1.2rem; display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; font-family: var(--mono); font-size: .74rem; }
+@media (max-width: 760px) { footer.site .wrap { grid-template-columns: 1fr 1fr; } footer.site .about { grid-column: 1 / -1; } }
+
+.mock-note { font-family: var(--mono); font-size: .72rem; color: var(--muted); text-align: center; padding-block: .6rem; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="info"><span>+387 37 777 518</span><span>Brezići bb, 77230 Velika Kladuša</span></div>
+    <div class="lang" role="group" aria-label="Jezik">
+      <button type="button" aria-pressed="true">BS</button>
+      <button type="button" aria-pressed="false">DE</button>
+      <button type="button" aria-pressed="false">EN</button>
+    </div>
+  </div>
+</div>
+
+<header class="site">
+  <div class="wrap" style="position:relative">
+    <a class="logo" href="#naslovna" aria-label="Lenatex naslovna">
+      <span class="logo-mark"><span>L</span></span>
+      <span class="logo-text"><b>LENATEX</b><small>proizvodnja tekstila · od 1998.</small></span>
+    </a>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="mainNav">Meni</button>
+    <nav class="main" id="mainNav" aria-label="Glavna navigacija">
+      <a href="#o-nama">O nama</a>
+      <a href="#radna-odjeca">Radna odjeća</a>
+      <a href="#posteljni-program">Posteljni program</a>
+      <a href="#masinsko-vezenje">Mašinsko vezenje</a>
+      <a href="#kontakt">Kontakt</a>
+      <a class="btn btn-thread" href="#kontakt">Zatraži ponudu</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ NASLOVNA ============ -->
+<div class="page" id="naslovna" data-page>
+  <section class="hero">
+    <div class="wrap">
+      <div class="copy">
+        <p class="eyebrow">Porodična tekstilna proizvodnja · Velika Kladuša</p>
+        <h1>Radna odjeća, posteljina i vez. <em>Šiveno kod nas</em> od 1998.</h1>
+        <p class="lead">Po narudžbi proizvodimo radnu odjeću za sve vrste djelatnosti, kompletan posteljni program i mašinski vez s vašim logom. Isporučujemo širom Bosne i Hercegovine i u dijelove Evrope.</p>
+        <div class="actions">
+          <a class="btn btn-thread" href="#kontakt">Zatraži ponudu</a>
+          <a class="btn btn-ghost" href="#programi">Pogledaj programe</a>
+        </div>
+      </div>
+      <div class="board" aria-hidden="true">
+        <div class="fab twill-navy a"><div class="reflex" style="top:58%"></div><span class="label-chip">WORKER · keper</span></div>
+        <div class="fab krep"><span class="label-chip">krep</span></div>
+        <div class="fab damast"><span class="label-chip">damast</span></div>
+        <div class="fab satin"><span class="label-chip">saten</span></div>
+        <div class="fab flanel"><span class="label-chip">flanel</span></div>
+        <div class="tag">
+          <b>LENATEX</b>
+          100% pamuk · po mjeri<br>Made in BiH
+          <div class="care">
+            <svg viewBox="0 0 24 24"><path d="M3 7h18l-2 12H5z"/><path d="M3 7c2 2 4 2 6 0s4-2 6 0 4 2 6 0"/><text x="8" y="17">95</text></svg>
+            <svg viewBox="0 0 24 24"><path d="M5 18h14l-2-8H9c-2 0-3 2-4 4z"/><circle cx="12" cy="14" r="1"/></svg>
+            <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="1"/><circle cx="12" cy="12" r="5"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="facts">
+    <div class="wrap">
+      <div><b>od 1998.</b><span>porodična firma</span></div>
+      <div><b>3 programa</b><span>odjeća, posteljina, vez</span></div>
+      <div><b>Po mjeri</b><span>ili standardne veličine</span></div>
+      <div><b>BiH + EU</b><span>isporuka u regiji i Evropi</span></div>
+    </div>
+  </div>
+
+  <section class="block" id="programi">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Šta proizvodimo</p>
+        <h2>Tri programa iz jedne radionice</h2>
+      </div>
+      <div class="programs">
+        <a class="program" href="#radna-odjeca">
+          <div class="fab twill-navy" style="border-radius:0"><div class="reflex" style="top:40%"></div></div>
+          <div class="body">
+            <h3>Radna odjeća</h3>
+            <p>Za industriju, gradilišta, ugostiteljstvo i medicinu. Birate boju, materijal i kroj.</p>
+            <ul><li>WORKER</li><li>SECURITY</li><li>SPORT</li><li>GASTRO</li><li>MEDICO</li></ul>
+            <span class="more">Radna odjeća</span>
+          </div>
+        </a>
+        <a class="program" href="#posteljni-program">
+          <div class="fab satin" style="border-radius:0"></div>
+          <div class="body">
+            <h3>Posteljni program</h3>
+            <p>Posteljine, plahte, jastučnice, štep deke i jorgani od kvalitetnih pamučnih materijala.</p>
+            <ul><li>krep</li><li>saten</li><li>flanel</li><li>damast</li><li>šifon</li></ul>
+            <span class="more">Posteljni program</span>
+          </div>
+        </a>
+        <a class="program" href="#masinsko-vezenje">
+          <div class="fab twill-red" style="border-radius:0"></div>
+          <div class="body">
+            <h3>Mašinsko vezenje</h3>
+            <p>Vaš logo ili tekst na uniformama, majicama, peškirima, kapama i zastavama.</p>
+            <ul><li>logo</li><li>amblemi</li><li>promo</li></ul>
+            <span class="more">Mašinsko vezenje</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Kako naručiti</p>
+        <h2>Od upita do isporuke u četiri koraka</h2>
+      </div>
+      <div class="steps">
+        <div class="step"><h3>Pošaljite upit</h3><p>Javite nam šta trebate, količinu i rok. Telefonom, e-mailom ili kroz formular.</p></div>
+        <div class="step"><h3>Odaberite materijal</h3><p>Zajedno biramo tkaninu, boje i kombinacije. Može standardni kroj ili vaš dizajn.</p></div>
+        <div class="step"><h3>Vez i detalji</h3><p>Dodajemo logo, ime firme ili oznake. Prije serije šaljemo uzorak na odobrenje.</p></div>
+        <div class="step"><h3>Proizvodnja i isporuka</h3><p>Šijemo u našoj radionici u Velikoj Kladuši i dostavljamo na vašu adresu.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Materijali za posteljinu</p>
+        <h2>Koji materijal je za vas?</h2>
+        <p class="lead">Sva posteljina je izrađena od pamučnih materijala. Svaki ima svoj osjećaj i svoju sezonu.</p>
+      </div>
+      <div class="swatches">
+        <a class="swatch" href="#posteljni-program" style="text-decoration:none"><div class="fab krep"></div><h3>Krep</h3><p>Ne treba peglanje, lagan za ljeto.</p></a>
+        <a class="swatch" href="#posteljni-program" style="text-decoration:none"><div class="fab satin"></div><h3>Saten</h3><p>Gladak, s blagim sjajem.</p></a>
+        <a class="swatch" href="#posteljni-program" style="text-decoration:none"><div class="fab flanel"></div><h3>Flanel</h3><p>Topao i mekan za zimu.</p></a>
+        <a class="swatch" href="#posteljni-program" style="text-decoration:none"><div class="fab damast"></div><h3>Damast</h3><p>Tkani uzorak, hotelski izgled.</p></a>
+        <a class="swatch" href="#posteljni-program" style="text-decoration:none"><div class="fab sifon"></div><h3>Šifon</h3><p>Tanak i prozračan.</p></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Za koga šijemo</p>
+        <h2>Odjeća za svaku djelatnost</h2>
+      </div>
+      <div class="chips">
+        <span>Industrija</span><span>Građevina</span><span>Transport</span><span>Benzinske pumpe</span><span>Skladišta</span><span>Trgovina</span><span>Prehrambena proizvodnja</span><span>Ugostiteljstvo</span><span>Hoteli</span><span>Medicina</span><span>Zaštitarske službe</span><span>Sportski klubovi</span>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ O NAMA ============ -->
+<div class="page" id="o-nama" data-page hidden>
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="crumbs"><a href="#naslovna">Naslovna</a> / O nama</p>
+      <h1>Porodična firma koja šije već 25+ godina</h1>
+      <p class="lead">Lenatex d.o.o. iz Velike Kladuše osnovan je 1998. godine kao porodična firma u privatnom vlasništvu. Od tada stalno rastemo, i po broju zaposlenih i po rezultatima poslovanja.</p>
+    </div>
+  </section>
+  <section class="block">
+    <div class="wrap split">
+      <div>
+        <div class="big-year">1998</div>
+        <p>Godina osnivanja · Velika Kladuša, BiH</p>
+      </div>
+      <div class="prose">
+        <p>Počeli smo kao mala porodična radionica. Danas proizvodimo radnu odjeću za mnoga zanimanja, kompletan posteljni program i radimo mašinski vez za firme, ugostitelje, ustanove i pojedince.</p>
+        <p>Naše proizvode koriste kupci širom Bosne i Hercegovine i u dijelovima Evrope. Prepoznatljivi smo po kvaliteti izrade i po tome što šijemo po mjeri: boju, materijal i kroj prilagođavamo kupcu.</p>
+        <p>Sve radimo u vlastitoj proizvodnji, od krojenja do veza. Zato možemo brzo odgovoriti na upit, napraviti uzorak i ispoštovati dogovoreni rok.</p>
+      </div>
+    </div>
+  </section>
+  <section class="block">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Kako radimo</p><h2>Šta nas razlikuje</h2></div>
+      <div class="values">
+        <div class="value"><h3>Vlastita proizvodnja</h3><p>Krojenje, šivenje i vez pod jednim krovom. Jedan kontakt za cijelu narudžbu.</p></div>
+        <div class="value"><h3>Po mjeri kupca</h3><p>Standardne veličine ili izrada po mjeri. Vaše boje, vaš logo, vaš kroj.</p></div>
+        <div class="value"><h3>Provjereni materijali</h3><p>Tkanine koje podnose pranje na visokim temperaturama i zadržavaju boju.</p></div>
+      </div>
+    </div>
+  </section>
+  <div class="band cta"><div class="wrap"><div><h2>Želite nas posjetiti?</h2><p>Radionica i prodaja nalaze se u Brezićima kod Velike Kladuše.</p></div><div class="actions"><a class="btn btn-thread" href="#kontakt">Kako do nas</a></div></div></div>
+</div>
+
+<!-- ============ RADNA ODJEĆA ============ -->
+<div class="page" id="radna-odjeca" data-page hidden>
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="crumbs"><a href="#naslovna">Naslovna</a> / Radna odjeća</p>
+      <h1>Radna odjeća po narudžbi</h1>
+      <p class="lead">Za sve vrste zanimanja i djelatnosti. Birate kombinacije boja i materijala ili nam pošaljete vlastiti dizajn. Šijemo u standardnim veličinama ili po mjeri.</p>
+    </div>
+  </section>
+  <section class="block">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Linije</p><h2>Pet linija za pet vrsta posla</h2></div>
+      <div class="lines">
+        <div class="line-card"><div class="fab twill-navy"><div class="reflex" style="top:55%"></div></div><div class="body"><h3>WORKER</h3><p>Hlače, jakne, kombinezoni i prsluci za industriju, gradilišta i skladišta.</p></div></div>
+        <div class="line-card"><div class="fab twill-black"></div><div class="body"><h3>SECURITY</h3><p>Uniforme za zaštitarske službe, s oznakama i vezom.</p></div></div>
+        <div class="line-card"><div class="fab twill-red"></div><div class="body"><h3>SPORT</h3><p>Trenerke, dresovi i majice za klubove i timove.</p></div></div>
+        <div class="line-card"><div class="fab pepita"></div><div class="body"><h3>GASTRO</h3><p>Kuharske bluze, pepita hlače, kecelje i kape.</p></div></div>
+        <div class="line-card"><div class="fab twill-teal"></div><div class="body"><h3>MEDICO</h3><p>Medicinske uniforme, mantili i odjeća za njegu.</p></div></div>
+      </div>
+    </div>
+  </section>
+  <section class="block">
+    <div class="wrap split">
+      <div>
+        <div class="sec-head"><p class="eyebrow">Materijali</p><h2>Tkanine KLOPMAN International</h2></div>
+        <ul class="checklist">
+          <li><div><b>Širok izbor boja</b><span>Kombinujte boje po vašem vizuelnom identitetu.</span></div></li>
+          <li><div><b>Različiti sastavi i gramature</b><span>Od laganih ljetnih do čvrstih tkanina za teže uslove rada.</span></div></li>
+          <li><div><b>Pranje na visokim temperaturama</b><span>Tkanina podnosi industrijsko pranje.</span></div></li>
+          <li><div><b>Postojanost boje i dug vijek</b><span>Boja ostaje ista i nakon mnogo pranja.</span></div></li>
+          <li><div><b>Zaštitna oprema</b><span>Uz odjeću nudimo i kompletan asortiman HTZ opreme.</span></div></li>
+        </ul>
+      </div>
+      <div class="spec-card">
+        <h3>Primjer specifikacije · WORKER hlače</h3>
+        <div class="spec-row"><span>Materijal</span><span>keper, poliester/pamuk</span></div>
+        <div class="spec-row"><span>Gramatura</span><span>245 g/m²</span></div>
+        <div class="spec-row"><span>Pranje</span><span>do 85 °C</span></div>
+        <div class="spec-row"><span>Veličine</span><span>44–64 ili po mjeri</span></div>
+        <div class="spec-row"><span>Boje</span><span>teget, siva, crna, zelena</span></div>
+        <div class="spec-row"><span>Dodaci</span><span>refleksne trake, vez loga</span></div>
+        <p class="note">Primjer za mockup. Stvarne vrijednosti upisuje Lenatex po artiklu.</p>
+      </div>
+    </div>
+  </section>
+  <section class="block">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Djelatnosti</p><h2>Gdje se nosi naša odjeća</h2></div>
+      <div class="chips"><span>Industrija</span><span>Građevina</span><span>Transport</span><span>Benzinske pumpe</span><span>Skladišta</span><span>Trgovina</span><span>Prehrambena proizvodnja</span><span>Ugostiteljstvo</span><span>Medicina</span></div>
+    </div>
+  </section>
+  <div class="band cta"><div class="wrap"><div><h2>Opremite cijeli tim</h2><p>Pošaljite broj radnika, vrstu posla i željene boje. Vraćamo ponudu s prijedlogom materijala.</p></div><div class="actions"><a class="btn btn-thread" href="#kontakt">Zatraži ponudu za radnu odjeću</a></div></div></div>
+</div>
+
+<!-- ============ POSTELJNI PROGRAM ============ -->
+<div class="page" id="posteljni-program" data-page hidden>
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="crumbs"><a href="#naslovna">Naslovna</a> / Posteljni program</p>
+      <h1>Posteljni program</h1>
+      <p class="lead">Posteljinu u standardnim veličinama ili po mjeri možete naručiti ili odabrati iz trenutne ponude. Sva posteljina je izrađena od kvalitetnih pamučnih materijala.</p>
+    </div>
+  </section>
+  <section class="block">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Materijali</p><h2>Pet tkanina, pet osjećaja</h2></div>
+      <div class="swatches">
+        <div class="swatch"><div class="fab krep"></div><h3>Krep</h3><p>Naborana struktura, ne zahtijeva peglanje. Idealan za ljeto i apartmane.</p><span class="spec">pamuk · sve sezone</span></div>
+        <div class="swatch"><div class="fab satin"></div><h3>Saten</h3><p>Gusto tkan, gladak, s blagim sjajem. Elegantan izgled spavaće sobe.</p><span class="spec">pamuk · sve sezone</span></div>
+        <div class="swatch"><div class="fab flanel"></div><h3>Flanel</h3><p>Češljana, mekana površina koja grije. Za hladne mjesece.</p><span class="spec">pamuk · zima</span></div>
+        <div class="swatch"><div class="fab damast"></div><h3>Damast</h3><p>Uzorak utkan u tkaninu. Čest izbor hotela i za stolnjake.</p><span class="spec">pamuk · hoteli</span></div>
+        <div class="swatch"><div class="fab sifon"></div><h3>Šifon</h3><p>Tanak, lagan i prozračan pamuk.</p><span class="spec">pamuk · ljeto</span></div>
+      </div>
+    </div>
+  </section>
+  <section class="block">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Asortiman</p><h2>Šta možete naručiti</h2></div>
+      <div class="products">
+        <div class="product"><div class="fab satin"></div><div><h3>Posteljine</h3><p>jednokrevetne, bračne i dječije</p></div></div>
+        <div class="product"><div class="fab krep"></div><div><h3>Plahte</h3><p>obične i s lastikom</p></div></div>
+        <div class="product"><div class="fab sifon"></div><div><h3>Jastučnice</h3><p>u svim materijalima</p></div></div>
+        <div class="product"><div class="fab flanel"></div><div><h3>Štep deke</h3><p>prošivene, lagane</p></div></div>
+        <div class="product"><div class="fab damast"></div><div><h3>Jastuci i jorgani</h3><p>za kuću i smještaj</p></div></div>
+        <div class="product"><div class="fab damast"></div><div><h3>Damastni stolnjaci</h3><p>u raznim dimenzijama i oblicima</p></div></div>
+      </div>
+    </div>
+  </section>
+  <section class="block">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Dimenzije</p><h2>Standardne veličine</h2></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Artikal</th><th>Jednokrevetna</th><th>Bračna</th><th>Dječija</th></tr></thead>
+          <tbody>
+            <tr><td>Navlaka za jorgan</td><td class="num">140 × 200 cm</td><td class="num">200 × 220 cm</td><td class="num">100 × 140 cm</td></tr>
+            <tr><td>Plahta</td><td class="num">160 × 240 cm</td><td class="num">240 × 260 cm</td><td class="num">120 × 160 cm</td></tr>
+            <tr><td>Jastučnica</td><td class="num">50 × 70 cm</td><td class="num">2 × 50 × 70 cm</td><td class="num">40 × 60 cm</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Primjer tabele za mockup. Ostale dimenzije šijemo po mjeri.</p>
+    </div>
+  </section>
+  <div class="band cta"><div class="wrap"><div><h2>Opremate hotel ili apartmane?</h2><p>Za veće količine pravimo posteljinu po mjeri vaših kreveta, s vezom naziva objekta.</p></div><div class="actions"><a class="btn btn-thread" href="#kontakt">Zatraži ponudu za posteljinu</a></div></div></div>
+</div>
+
+<!-- ============ MAŠINSKO VEZENJE ============ -->
+<div class="page" id="masinsko-vezenje" data-page hidden>
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="crumbs"><a href="#naslovna">Naslovna</a> / Mašinsko vezenje</p>
+      <h1>Mašinsko vezenje</h1>
+      <p class="lead">Vaš logo ili tekst, izvezen na odjeći, peškirima i promotivnim artiklima. Vez traje duže od štampe i izgleda profesionalno i nakon mnogo pranja.</p>
+    </div>
+  </section>
+  <section class="block">
+    <div class="wrap split">
+      <div class="embroidery fab twill-navy" aria-hidden="true">
+        <svg viewBox="0 0 400 300">
+          <circle cx="200" cy="140" r="72" fill="none" stroke="#E8B523" stroke-width="5" stroke-dasharray="7 4"/>
+          <circle cx="200" cy="140" r="56" fill="none" stroke="#EEF2F7" stroke-width="2" stroke-dasharray="3 3"/>
+          <text x="200" y="158" text-anchor="middle" font-family="Archivo, Arial, sans-serif" font-weight="900" font-size="52" fill="#EEF2F7">L</text>
+          <text x="200" y="250" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="16" letter-spacing="4" fill="#E8B523">VAŠ LOGO</text>
+        </svg>
+      </div>
+      <div>
+        <div class="sec-head"><p class="eyebrow">Usluge</p><h2>Šta vezemo</h2></div>
+        <ul class="checklist">
+          <li><div><b>Logo i tekst na odjeći</b><span>Radne uniforme, majice, duksevi, košulje, kecelje i kape.</span></div></li>
+          <li><div><b>Peškiri i tekstil</b><span>Peškiri, navlake i posteljina s nazivom objekta.</span></div></li>
+          <li><div><b>Zastave i promo artikli</b><span>Za firme, klubove i manifestacije.</span></div></li>
+          <li><div><b>Amblemi po narudžbi</b><span>Izrađujemo amblem prema vašim zahtjevima, za našivanje.</span></div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  <section class="block">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Postupak</p><h2>Kako pripremiti logo za vez</h2></div>
+      <div class="uses">
+        <div class="use"><h3>Pošaljite fajl</h3><p>Najbolje vektorski (PDF, AI, SVG). Može i kvalitetan PNG.</p></div>
+        <div class="use"><h3>Digitalizacija</h3><p>Logo pretvaramo u program za vez i biramo boje konca.</p></div>
+        <div class="use"><h3>Probni vez</h3><p>Šaljemo fotografiju ili uzorak prije serije.</p></div>
+        <div class="use"><h3>Serija</h3><p>Vezemo na vaše artikle ili na odjeću iz naše proizvodnje.</p></div>
+      </div>
+    </div>
+  </section>
+  <div class="band cta"><div class="wrap"><div><h2>Pošaljite logo, mi javljamo cijenu</h2><p>Navedite artikal, količinu i približnu veličinu veza.</p></div><div class="actions"><a class="btn btn-thread" href="#kontakt">Pošalji upit za vez</a></div></div></div>
+</div>
+
+<!-- ============ KONTAKT ============ -->
+<div class="page" id="kontakt" data-page hidden>
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="crumbs"><a href="#naslovna">Naslovna</a> / Kontakt</p>
+      <h1>Kontakt i narudžbe</h1>
+      <p class="lead">Narudžbe primamo e-mailom, telefonom ili kroz formular ispod. Odgovaramo u toku radnog dana.</p>
+    </div>
+  </section>
+  <section class="block">
+    <div class="wrap contact-grid">
+      <div>
+        <div class="contact-list">
+          <div><span>Telefon / fax</span><b>+387 37 777 518</b></div>
+          <div><span>Mobitel</span><b>+387 61 368 329</b></div>
+          <div><span>E-mail</span><b>info@lenatex.ba</b></div>
+          <div><span>Adresa</span><b>Brezići bb, 77230 Velika Kladuša</b></div>
+        </div>
+        <div class="map" id="kako-do-nas" aria-label="Skica lokacije">
+          <div class="road" style="left:0;right:0;top:48%;height:10px"></div>
+          <div class="road" style="left:52%;top:0;bottom:0;width:8px"></div>
+          <div class="pin"><i></i><b>Lenatex · Brezići bb</b></div>
+          <a class="btn btn-thread" href="https://www.google.com/maps/search/?api=1&query=Brezi%C4%87i%2C%20Velika%20Kladu%C5%A1a" target="_blank" rel="noopener">Otvori u Google Maps</a>
+        </div>
+      </div>
+      <form class="inquiry" id="inquiryForm" novalidate>
+        <h2 style="font-size:var(--step-2);font-weight:800">Pošaljite upit</h2>
+        <div class="row2">
+          <div class="field"><label for="f-name">Ime i prezime</label><input id="f-name" value="Amra Hodžić"></div>
+          <div class="field"><label for="f-company">Firma</label><input id="f-company" value="Hotel Una d.o.o."></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label for="f-email">E-mail</label><input id="f-email" type="email" value="nabavka@primjer.ba"></div>
+          <div class="field"><label for="f-phone">Telefon</label><input id="f-phone" value="+387 61 000 000"></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label for="f-program">Program</label>
+            <select id="f-program"><option>Radna odjeća</option><option selected>Posteljni program</option><option>Mašinsko vezenje</option><option>Ostalo</option></select>
+          </div>
+          <div class="field"><label for="f-qty">Okvirna količina</label><input id="f-qty" value="60 kompleta"></div>
+        </div>
+        <div class="field"><label for="f-msg">Poruka</label><textarea id="f-msg">Trebamo bračnu posteljinu od satena za 30 soba, s vezom naziva hotela na jastučnicama. Molimo ponudu i rok isporuke.</textarea></div>
+        <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap">
+          <button class="btn btn-thread" type="submit">Pošalji upit</button>
+          <span class="form-msg" id="formMsg" role="status"></span>
+        </div>
+        <p class="note">Polja su popunjena primjerom za prikaz.</p>
+      </form>
+    </div>
+  </section>
+</div>
+
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="about">
+      <a class="logo" href="#naslovna"><span class="logo-mark"><span>L</span></span><span class="logo-text"><b>LENATEX</b><small>proizvodnja tekstila · od 1998.</small></span></a>
+      <p style="margin-top:1rem;max-width:36ch">Porodična tekstilna proizvodnja iz Velike Kladuše. Radna odjeća, posteljina i mašinski vez po narudžbi.</p>
+    </div>
+    <div><h4>Programi</h4><ul><li><a href="#radna-odjeca">Radna odjeća</a></li><li><a href="#posteljni-program">Posteljni program</a></li><li><a href="#masinsko-vezenje">Mašinsko vezenje</a></li></ul></div>
+    <div><h4>Firma</h4><ul><li><a href="#o-nama">O nama</a></li><li><a href="#kontakt">Kontakt</a></li><li><a href="#kontakt">Kako do nas</a></li></ul></div>
+    <div><h4>Kontakt</h4><ul><li>+387 37 777 518</li><li>+387 61 368 329</li><li>Brezići bb, 77230 Velika Kladuša</li></ul></div>
+    <div class="legal"><span>© 1998–2026 Lenatex d.o.o.</span><span>Bosanski · Deutsch · English</span></div>
+  </div>
+</footer>
+<p class="mock-note">Mockup redizajna · uzorci tkanina zamjenjuju se stvarnim fotografijama proizvoda</p>
+
+<script>
+(function () {
+  var pages = document.querySelectorAll('[data-page]');
+  var navLinks = document.querySelectorAll('nav.main a:not(.btn)');
+  var nav = document.getElementById('mainNav');
+  var toggle = document.getElementById('menuToggle');
+
+  function route() {
+    var id = location.hash.slice(1) || 'naslovna';
+    var target = document.getElementById(id);
+    var page = target && (target.hasAttribute('data-page') ? target : target.closest('[data-page]'));
+    if (!page) page = document.getElementById('naslovna');
+    var changed = page.hidden;
+    pages.forEach(function (p) { p.hidden = p !== page; });
+    navLinks.forEach(function (a) {
+      if (a.getAttribute('href') === '#' + page.id) a.setAttribute('aria-current', 'page');
+      else a.removeAttribute('aria-current');
+    });
+    nav.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
+    if (target && target !== page) target.scrollIntoView({ block: 'start' });
+    else if (changed) window.scrollTo(0, 0);
+  }
+  window.addEventListener('hashchange', route);
+  route();
+
+  toggle.addEventListener('click', function () {
+    var open = nav.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  document.querySelectorAll('.lang button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('.lang button').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+    });
+  });
+
+  document.getElementById('inquiryForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    document.getElementById('formMsg').textContent = 'Upit zaprimljen (mockup, ništa nije poslano).';
+  });
+})();
+</script>
+</body>
+</html>
