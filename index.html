@@ -2,7 +2,7 @@
 <html lang="bs">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Lenatex redizajn</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -95,6 +95,10 @@ nav.main .btn { margin-left: .5rem; color: var(--thread-ink); }
 .menu-toggle .i-close, .menu-toggle[aria-expanded="true"] .i-open { display: none; }
 .menu-toggle[aria-expanded="true"] .i-close { display: block; }
 @media (max-width: 920px) {
+  /* na mobitelu fiksno zaglavlje, puna pozadina (bez blur-a) radi pouzdanosti na iOS/Android */
+  header.site { position: fixed; top: 0; left: 0; right: 0; padding-top: env(safe-area-inset-top, 0px); background: var(--paper); backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: 0 2px 12px rgba(21,32,44,.06); }
+  main { padding-top: calc(65px + env(safe-area-inset-top, 0px)); }
+  [id] { scroll-margin-top: 80px; }
   .head-actions { display: flex; }
   header.site .wrap { padding-block: .6rem; }
   .logo-text small .since { display: none; }
